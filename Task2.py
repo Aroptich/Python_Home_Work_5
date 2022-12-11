@@ -10,17 +10,40 @@
 import random
 
 
+def bot(N, a)-> int:
+    # Функцианал бота
+    if N%2==1:
+        take_candy_bot = (28 - a) + 1
+    else:
+        take_candy_bot = (28 - a) + 1
+    print(N,a)
+    take_candy_bot = random.randint(1, 28)
+    return take_candy_bot
+
+def player() -> int:
+    #Функцианал игрока
+    make_candy = int(input('Берите конфеты от 1 до 28 '))
+    return make_candy
+
 def candy_game():
     # Количество конфет в партии
     N = 121
     print(f'Количество конфет в партии {N}')
+    # Выберите режим игры
+    print('Выберите режим игры\n'
+          '1 - Режим игры с ботом\n'
+          '2 - Режим игры с другом')
+    game_mode = int(input("Вибирите число 1 или 2: "))
+    if game_mode == 1:
+        player1 = input("Введите имя 1 игрока: ")
+        player2 = 'Bot'
+    else:
+        player1 = input("Введите имя 1 игрока: ")
+        player2 = input("Введите имя 2 игрока: ")
 
-    player1 = input("Введите имя 1 игрока: ")
-    player2 = input("Введите имя 2 игрока: ")
 
     # Жеребьевка
     def lottery() -> tuple[str]:
-        while True:
             number_player1 = random.randint(1, 6)
             number_player2 = random.randint(1, 6)
             print(f'Бросок кубика игрока {player1}={number_player1}')
@@ -28,36 +51,64 @@ def candy_game():
             if number_player1 > number_player2:
                 print(f'Первым ходит игрок {player1}')
                 return player1, player2
-                break
             elif number_player1 < number_player2:
                 print(f'Первым ходит игрок {player2}')
                 return player2, player1
-                break
             else:
                 print("Ничья. Бросаем кубики снова")
+                return lottery()
 
     # Игра
     def game(N: int):
-        if status == True:
-            players = lottery()
+
+        players = lottery()
+        a = 0
+        if 'Bot' in players:
+            while N > 0:
+                if players[0] == 'Bot':
+                    print(f'Ходит игрок {players[0]}')
+                    N -= bot(N, a)
+                    print(f'На столе осталось конфет {N}')
+                    if N <= 0:
+                        print(f'Игрок {players[0]} победил!')
+                        break
+                    print(f'Ходит игрок {players[1]}')
+                    a = player()
+                    N -= a
+                    print(f'На столе осталось конфет {N}')
+                    if N <= 0:
+                        print(f'Игрок {players[1]} победил!')
+                        break
+                else:
+                    print(f'Ходит игрок {players[1]}')
+                    a = player()
+                    N -= a
+                    print(f'На столе осталось конфет {N}')
+                    if N <= 0:
+                        print(f'Игрок {players[1]} победил!')
+                        break
+                    print(f'Ходит игрок {players[0]}')
+                    N -= bot(N, a)
+                    print(f'На столе осталось конфет {N}')
+                    if N <= 0:
+                        print(f'Игрок {players[0]} победил!')
+                        break
+        else:
             while N > 0:
                 print(f'Ходит игрок {players[0]}')
-                take_candy = int(input('Берите конфеты от 1 до 28 '))
-                N -= take_candy
+                N -= player()
                 print(f'На столе осталось конфет {N}')
                 if N <= 0:
                     print(f'Игрок {players[0]} победил!')
-                    status = False
+                    break
                 print(f'Ходит игрок {players[1]}')
-                take_candy = int(input('Берите конфеты от 1 до 28 '))
-                N -= take_candy
+                N -= player()
                 print(f'На столе осталось конфет {N}')
                 if N <= 0:
                     print(f'Игрок {players[1]} победил!')
-                    status = False
+                    break
 
     game(N)
-    exit()
 
 
 candy_game()
